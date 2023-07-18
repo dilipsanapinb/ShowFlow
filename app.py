@@ -1,13 +1,14 @@
 from flask import Flask,request
 from flask_mysqldb import MySQL
 from dotenv import load_dotenv
-
+load_dotenv()
+import os 
 import bcrypt
 import jwt
 app=Flask(__name__)
-load_dotenv()
 
-import os 
+
+
 app.config['MYSQL_HOST']='localhost'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER']="root"
@@ -19,8 +20,6 @@ mysql=MySQL(app)
 def helloUser():
     return 'Welcome to the BooSpotOn: The leading booking app'
 
-# # create new user
-@app.route('/api/user', methods=['POST'])
 def create_user():
     try:
         user_data = request.json
@@ -30,7 +29,7 @@ def create_user():
         role = user_data['role']
         membership = user_data['membership']
 
-        hashed_password=bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO user (username, email, password, role, membership) VALUES (%s, %s, %s, %s, %s)", (username, email, hashed_password, role, membership))
@@ -41,48 +40,44 @@ def create_user():
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
-
-
+    
 # login route
-
 @app.route('/api/login',methods=['POST'])
 def login():
     try:
-        login_data=request.json
-        username=login_data['username']
-        password=login_data['password']
-        cur=mysql.connection.cursor()
-        cur.execute("SELECT id, username,password FROM user WHERE username=%s",(username,))
-        user=cur.fetchone()
+        login_data = request.json
+        email = login_data['email']
+        password = login_data['password']
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT id, email, password FROM user WHERE email=%s", (email,))
+        user = cur.fetchone()
         cur.close()
 
         if user:
-            stored_password=user[2].encoded('utf-8')
-            if bcrypt.checkpw(password.ecode('utf-8'),stored_password):
-
-                # to generate the json web token
-
-            
-                token=jwt.encode({'user_id':user[0]},os.getenv("SECRETE_KEY"),algorithm='HS256')
-                return {'token':token.decode('utf-8')}
+            stored_password = user[2].encode('utf-8')
+            if bcrypt.checkpw(password.encode('utf-8'), stored_password):
+                # Generate the JSON Web Token
+                token = jwt.encode({'user_id': user[0]}, os.getenv("SECRET_KEY"), algorithm='HS256')
+                return {'token': token}
+            else:
+                return 'Invalid username or password'
+        else:
             return 'Invalid username or password'
-
-
     except Exception as e:
-        print(f"An error occurred:{str(e)}")
-        return 'Internal Server Error',500
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 
 # verify token function
 
-def verify_token(token):
-    try:
-        decoded_token=jwt.decode(token,os.getenv("SECRETE_KEY"),algorithms=['HS256'])
-        return decoded_token['user_id']
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
+# def verify_token(token):
+#     try:
+#         decoded_token=jwt.decode(token,os.getenv("SECRET_KEY"),algorithms=['HS256'])
+#         return decoded_token['user_id']
+#     except jwt.ExpiredSignatureError:
+#         return None
+#     except jwt.InvalidTokenError:
+#         return None
 
 
 # Example protected route
@@ -99,7 +94,9 @@ def verify_token(token):
 #     except Exception as e:
 #         print(f"An error occurred: {str(e)}")
 #         return 'Internal Server Error', 500
-# # get a list of all users
+
+
+# get a list of all users
 # @app.route('/api/users',methods=['GET'])
 
 # # get a user by id

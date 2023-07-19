@@ -411,6 +411,120 @@ def delete_theater(theater_id):
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
 
+# # show Routes
+# #create a new show
+@app.route('/api/show',methods=['POST'])
+def create_show():
+    try:
+        show_data = request.json
+        movie_id = show_data.get('movie_id')
+        start_time = show_data.get('start_time')
+        end_time = show_data.get('end_time')
+        category = show_data.get('category')
+        theater_id = show_data.get('theater_id')
+        capacity = show_data.get('capacity')
+        price = show_data.get('price')
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO `show` (movie_id, start_time, end_time, category, theater_id, capacity, price) VALUES (%s, %s, %s, %s, %s, %s, %s)", (movie_id, start_time, end_time, category, theater_id, capacity, price))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Show created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+
+# # get a list of all show
+@app.route('/api/show',methods=['GET'])
+def get_all_shows():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM `show`")
+        shows = cur.fetchall()
+        cur.close()
+
+        show_list = []
+        for show in shows:
+            show_data = {
+                'id': show[0],
+                'movie_id': show[1],
+                'start_time': show[2].isoformat(),
+                'end_time': show[3].isoformat(),
+                'category': show[4],
+                'theater_id': show[5],
+                'capacity': show[6],
+                'price': float(show[7])
+            }
+            show_list.append(show_data)
+
+        return jsonify(show_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+# # get a show by id
+@app.route('/api/show/:id',methods=['GET'])
+def get_show(show_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM `show` WHERE id = %s", (show_id,))
+        show = cur.fetchone()
+        cur.close()
+
+        if show:
+            show_data = {
+                'id': show[0],
+                'movie_id': show[1],
+                'start_time': show[2].isoformat(),
+                'end_time': show[3].isoformat(),
+                'category': show[4],
+                'theater_id': show[5],
+                'capacity': show[6],
+                'price': float(show[7])
+            }
+            return jsonify(show_data)
+        else:
+            return 'Show not found', 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+# # update a show by id 
+@app.route('/api/show/:id',methods=['PUT'])
+def update_show(show_id):
+    try:
+        show_data = request.json
+        start_time = show_data.get('start_time')
+        end_time = show_data.get('end_time')
+        category = show_data.get('category')
+        capacity = show_data.get('capacity')
+        price = show_data.get('price')
+
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE `show` SET start_time = %s, end_time = %s, category = %s, capacity = %s, price = %s WHERE id = %s", (start_time, end_time, category, capacity, price, show_id))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Show updated successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# # delete a show by id 
+@app.route('/api/show/:id',methods=['DELETE'])
+def delete_show(show_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM `show` WHERE id = %s", (show_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Show deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 
 

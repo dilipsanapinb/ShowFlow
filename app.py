@@ -731,6 +731,107 @@ def delete_seat(seat_id):
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
 
+# create areview on movie
+@app.route('/api/reviews', methods=['POST'])
+def create_review():
+    try:
+        review_data = request.json
+        user_id = review_data.get('user_id')
+        movie_id = review_data.get('movie_id')
+        rating = review_data.get('rating')
+        review_text = review_data.get('review_text')
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO review (user_id, movie_id, rating, review_text) VALUES (%s, %s, %s, %s)", (user_id, movie_id, rating, review_text))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Review created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# get all review on movie
+@app.route('/api/reviews', methods=['GET'])
+def get_all_reviews():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM review")
+        reviews = cur.fetchall()
+        cur.close()
+
+        review_list = []
+        for review in reviews:
+            review_data = {
+                'id': review[0],
+                'user_id': review[1],
+                'movie_id': review[2],
+                'rating': review[3],
+                'review_text': review[4]
+            }
+            review_list.append(review_data)
+
+        return jsonify(review_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# get a review by id
+@app.route('/api/reviews/<int:review_id>', methods=['GET'])
+def get_review(review_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM review WHERE id = %s", (review_id,))
+        review = cur.fetchone()
+        cur.close()
+
+        if review:
+            review_data = {
+                'id': review[0],
+                'user_id': review[1],
+                'movie_id': review[2],
+                'rating': review[3],
+                'review_text': review[4]
+            }
+            return jsonify(review_data)
+        else:
+            return 'Review not found', 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# update a review by id
+@app.route('/api/reviews/<int:review_id>', methods=['PUT'])
+def update_review(review_id):
+    try:
+        review_data = request.json
+        rating = review_data.get('rating')
+        review_text = review_data.get('review_text')
+
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE review SET rating = %s, review_text = %s WHERE id = %s", (rating, review_text, review_id))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Review updated successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# delete a review by id
+@app.route('/api/reviews/<int:review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM review WHERE id = %s", (review_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Review deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
 if __name__== '__main__':
     app.run()
     app.debug(True)

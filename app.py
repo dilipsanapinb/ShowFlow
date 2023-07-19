@@ -304,6 +304,114 @@ def delete_movie(movie_id):
         return 'Internal Server Error', 500
     
 
+# # theaters Routes
+# #create a new movie
+@app.route('/api/theaters',methods=['POST'])
+def create_theater():
+    try:
+        theater_data = request.json
+        name = theater_data['name']
+        address = theater_data['address']
+        city = theater_data['city']
+        state = theater_data['state']
+        capacity = theater_data['capacity']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO theater (name, address, city, state, capacity) VALUES (%s, %s, %s, %s, %s)", (name, address, city, state, capacity))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Theater created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+
+# # get a list of all theaters
+@app.route('/api/theaters',methods=['GET'])
+def get_all_theaters():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM theater")
+        theaters = cur.fetchall()
+        cur.close()
+
+        theater_list = []
+        for theater in theaters:
+            theater_data = {
+                'id': theater[0],
+                'name': theater[1],
+                'address': theater[2],
+                'city': theater[3],
+                'state': theater[4],
+                'capacity': theater[5]
+            }
+            theater_list.append(theater_data)
+
+        return jsonify(theater_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+# # get a theaters by id
+@app.route('/api/theaters/<theater_id>',methods=['GET'])
+def get_theater(theater_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM theater WHERE id = %s", (theater_id,))
+        theater = cur.fetchone()
+        cur.close()
+
+        if theater:
+            theater_data = {
+                'id': theater[0],
+                'name': theater[1],
+                'address': theater[2],
+                'city': theater[3],
+                'state': theater[4],
+                'capacity': theater[5]
+            }
+            return jsonify(theater_data)
+        else:
+            return 'Theater not found', 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+# # update a theaters by id 
+@app.route('/api/theaters/<theater_id>',methods=['PUT'])
+def update_theater(theater_id):
+    try:
+        theater_data = request.json
+        name = theater_data.get('name')
+        address = theater_data.get('address')
+        city = theater_data.get('city')
+        state = theater_data.get('state')
+        capacity = theater_data.get('capacity')
+
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE theater SET name = %s, address = %s, city = %s, state = %s, capacity = %s WHERE id = %s", (name, address, city, state, capacity, theater_id))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Theater updated successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+# # delete a theaters by id 
+@app.route('/api/theaters/:id',methods=['DELETE'])
+def delete_theater(theater_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM theater WHERE id = %s", (theater_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Theater deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+
 
 
 if __name__== '__main__':

@@ -27,13 +27,12 @@ def create_user():
         username = user_data['username']
         email = user_data['email']
         password = user_data['password']
-        role = user_data['role']
-        membership = user_data['membership']
+        
 
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO user (username, email, password, role, membership) VALUES (%s, %s, %s, %s, %s)", (username, email, hashed_password, role, membership))
+        cur.execute("INSERT INTO user (username, email, password) VALUES (%s, %s, %s)", (username, email, hashed_password))
         mysql.connection.commit()
         cur.close()
 
@@ -104,8 +103,7 @@ def getAllUser():
                         "username":user[1],
                         "email":user[2],
                         "password":user[3],
-                        "role":user[4],
-                        "membership":user[5]
+                        
                     }
                     user_list.append(user_data)
 
@@ -130,8 +128,7 @@ def getUserById(user_id):
                 "username":user[1],
                 "email":user[2],
                 "password":user[3],
-                "role":user[4],
-                "membership":user[5]
+                
             }
             return jsonify(user_data)
         else:

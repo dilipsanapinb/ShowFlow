@@ -5,6 +5,7 @@ load_dotenv()
 import os 
 import bcrypt
 import jwt
+from  functools import wraps
 app=Flask(__name__)
 
 
@@ -69,57 +70,44 @@ def login():
 
 
 # verify token function
+def authenticate(func):
+    @wraps(func)
+    def warapper(*args, **kwargs):
+        token=request.headers.get('Authorization')
 
-def verify_token(token):
-    try:
-        decoded_token=jwt.decode(token,os.getenv("SECRET_KEY"),algorithms=['HS256'])
-        return decoded_token['user_id']
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
-
-
-# Example protected route
-# @app.route('/api/protected', methods=['GET'])
-# def protected():
-#     try:
-#         token = request.headers.get('Authorization')
-#         if token:
-#             user_id = verify_token(token)
-#             if user_id:
-#                 # User is authenticated, proceed with the protected resource
-#                 return 'This is a protected resource'
-#         return 'Unauthorized', 401
-#     except Exception as e:
-#         print(f"An error occurred: {str(e)}")
-#         return 'Internal Server Error', 500
-
+        if not token:
+            return 'Missing the token is request',401
+        
+        try:
+            decoded_token=jwt.decode(token,os.getenv('SECRET_KEY'))
+            user_id=decoded_token['user_id']
+        except jwt.ExpiredSignatureError:
+            return 'Token expired',401
+        except jwt.InvalidTokenError:
+            return 'Invalid token',401
+    return warapper
 
 # get a list of all users
 @app.route('/api/users',methods=['GET'])
+@authenticate
 def getAllUser():
     try:
-        token = request.headers.get('Authorization')
-        if token:
-            user_id = verify_token(token)
-            if user_id:
-                   cur=mysql.connection.cursor()
-            cur.execute("SELECT * FROM user")
-            users=cur.fetchall()
-            cur.close()
+        cur=mysql.connection.cursor()
+        cur.execute("SELECT * FROM user")
+        users=cur.fetchall()
+        cur.close()
 
-            user_list=[]
-            for user in users:
-                user_data={
-                    'id':user[0],
-                    "username":user[1],
-                    "email":user[2],
-                    "password":user[3],
-                    "role":user[4],
-                    "membership":user[5]
-                }
-                user_list.append(user_data)
+        user_list=[]
+        for user in users:
+                    user_data={
+                        'id':user[0],
+                        "username":user[1],
+                        "email":user[2],
+                        "password":user[3],
+                        "role":user[4],
+                        "membership":user[5]
+                    }
+                    user_list.append(user_data)
 
         return jsonify(user_list)
     except Exception as e:
@@ -128,13 +116,10 @@ def getAllUser():
 
 # # get a user by id
 @app.route('/api/users/<user_id>',methods=['GET'])
+@authenticate
 def getUserById(user_id):
     try:
-        token = request.headers.get('Authorization')
-        if token:
-            user_id = verify_token(token)
-            if user_id:
-                cur=mysql.connection.cursor()
+        cur=mysql.connection.cursor()
         cur.execute("SELECT * FROM user WHERE id=%s",(user_id,))
         user=cur.fetchone()
         cur.close()
@@ -157,8 +142,24 @@ def getUserById(user_id):
         return 'Internal Server Error', 500
 
 # # update a specific user info
-@app.route('/api/users/:id',methods=['PUT'])
-
+@app.route('/api/users/<user_id>',methods=['PUT'])
+def update_user(user_id):
+    try:
+        user_data=request.json
+        username = user_data['username']
+        email = user_data['email']
+        password = user_data['password']
+        role = user_data['role']
+        membership = user_data['membership']
+        hashed_password=bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        cur=mysql.connection.cursor()
+        cur.execute("UPDATE user SET username=%s,email=%s,password=%s,role=%s,membership=%s WHERE id=%s",(username,email,hashed_password,role,membership,user_id))
+        mysql.connection.commit()
+        cur.close()
+        return "User updated successfully"
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 # # delete a specific user
 # @app.route('/api/users/:id',methods=['DELETE'])
 

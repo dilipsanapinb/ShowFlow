@@ -526,7 +526,112 @@ def delete_show(show_id):
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
 
+# # bookings Routes
+# #create a new movie
+@app.route('/api/bookings',methods=['POST'])
+def create_booking():
+    try:
+        booking_data = request.json
+        user_id = booking_data.get('user_id')
+        show_id = booking_data.get('show_id')
+        number_of_tickets = booking_data.get('number_of_tickets')
+        booking_date = booking_data.get('booking_date')
+        total_cost = booking_data.get('total_cost')
 
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO booking (user_id, show_id, number_of_tickets, booking_date, total_cost) VALUES (%s, %s, %s, %s, %s)", (user_id, show_id, number_of_tickets, booking_date, total_cost))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Booking created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+# # get a list of all bookings
+@app.route('/api/bookings',methods=['GET'])
+def get_all_bookings():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM booking")
+        bookings = cur.fetchall()
+        cur.close()
+
+        booking_list = []
+        for booking in bookings:
+            booking_data = {
+                'id': booking[0],
+                'user_id': booking[1],
+                'show_id': booking[2],
+                'number_of_tickets': booking[3],
+                'booking_date': booking[4].isoformat(),
+                'total_cost': float(booking[5])
+            }
+            booking_list.append(booking_data)
+
+        return jsonify(booking_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# # get a booking by id
+@app.route('/api/bookings/:id',methods=['GET'])
+def get_booking(booking_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM booking WHERE id = %s", (booking_id,))
+        booking = cur.fetchone()
+        cur.close()
+
+        if booking:
+            booking_data = {
+                'id': booking[0],
+                'user_id': booking[1],
+                'show_id': booking[2],
+                'number_of_tickets': booking[3],
+                'booking_date': booking[4].isoformat(),
+                'total_cost': float(booking[5])
+            }
+            return jsonify(booking_data)
+        else:
+            return 'Booking not found', 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+# # update a booking by id 
+@app.route('/api/bookings/:id',methods=['PUT'])
+def update_booking(booking_id):
+    try:
+        booking_data = request.json
+        number_of_tickets = booking_data.get('number_of_tickets')
+        booking_date = booking_data.get('booking_date')
+        total_cost = booking_data.get('total_cost')
+
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE booking SET number_of_tickets = %s, booking_date = %s, total_cost = %s WHERE id = %s", (number_of_tickets, booking_date, total_cost, booking_id))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Booking updated successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+
+# # delete a booking by id 
+@app.route('/api/bookings/:id',methods=['DELETE'])
+def delete_booking(booking_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM booking WHERE id = %s", (booking_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Booking deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 if __name__== '__main__':
     app.run()

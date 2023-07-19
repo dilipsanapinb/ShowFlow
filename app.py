@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask,request,jsonify
 from flask_mysqldb import MySQL
 from dotenv import load_dotenv
 load_dotenv()
@@ -19,7 +19,7 @@ mysql=MySQL(app)
 @app.route('/')
 def helloUser():
     return 'Welcome to the BooSpotOn: The leading booking app'
-
+@app.route('/api/user',methods=["POST"])
 def create_user():
     try:
         user_data = request.json
@@ -70,14 +70,14 @@ def login():
 
 # verify token function
 
-# def verify_token(token):
-#     try:
-#         decoded_token=jwt.decode(token,os.getenv("SECRET_KEY"),algorithms=['HS256'])
-#         return decoded_token['user_id']
-#     except jwt.ExpiredSignatureError:
-#         return None
-#     except jwt.InvalidTokenError:
-#         return None
+def verify_token(token):
+    try:
+        decoded_token=jwt.decode(token,os.getenv("SECRET_KEY"),algorithms=['HS256'])
+        return decoded_token['user_id']
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
 
 
 # Example protected route
@@ -97,13 +97,67 @@ def login():
 
 
 # get a list of all users
-# @app.route('/api/users',methods=['GET'])
+@app.route('/api/users',methods=['GET'])
+def getAllUser():
+    try:
+        token = request.headers.get('Authorization')
+        if token:
+            user_id = verify_token(token)
+            if user_id:
+                   cur=mysql.connection.cursor()
+            cur.execute("SELECT * FROM user")
+            users=cur.fetchall()
+            cur.close()
+
+            user_list=[]
+            for user in users:
+                user_data={
+                    'id':user[0],
+                    "username":user[1],
+                    "email":user[2],
+                    "password":user[3],
+                    "role":user[4],
+                    "membership":user[5]
+                }
+                user_list.append(user_data)
+
+        return jsonify(user_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 # # get a user by id
-# @app.route('/api/users/:id',methods=['GET'])
+@app.route('/api/users/<user_id>',methods=['GET'])
+def getUserById(user_id):
+    try:
+        token = request.headers.get('Authorization')
+        if token:
+            user_id = verify_token(token)
+            if user_id:
+                cur=mysql.connection.cursor()
+        cur.execute("SELECT * FROM user WHERE id=%s",(user_id,))
+        user=cur.fetchone()
+        cur.close()
+
+        if user:
+            user_data={
+                'id':user[0],
+                "username":user[1],
+                "email":user[2],
+                "password":user[3],
+                "role":user[4],
+                "membership":user[5]
+            }
+            return jsonify(user_data)
+        else:
+            return "User not found",404
+        
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 # # update a specific user info
-# @app.route('/api/users/:id',methods=['PUT'])
+@app.route('/api/users/:id',methods=['PUT'])
 
 # # delete a specific user
 # @app.route('/api/users/:id',methods=['DELETE'])

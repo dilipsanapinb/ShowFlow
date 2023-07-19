@@ -633,6 +633,104 @@ def delete_booking(booking_id):
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
 
+# create a seat
+@app.route('/api/seats', methods=['POST'])
+def create_seat():
+    try:
+        seat_data = request.json
+        show_id = seat_data.get('show_id')
+        seat_number = seat_data.get('seat_number')
+        seat_status = seat_data.get('seat_status')
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO seat (show_id, seat_number, seat_status) VALUES (%s, %s, %s)", (show_id, seat_number, seat_status))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Seat created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# get all seats
+@app.route('/api/seats', methods=['GET'])
+def get_all_seats():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM seat")
+        seats = cur.fetchall()
+        cur.close()
+
+        seat_list = []
+        for seat in seats:
+            seat_data = {
+                'id': seat[0],
+                'show_id': seat[1],
+                'seat_number': seat[2],
+                'seat_status': seat[3]
+            }
+            seat_list.append(seat_data)
+
+        return jsonify(seat_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# get a seat by id
+@app.route('/api/seats/<int:seat_id>', methods=['GET'])
+def get_seat(seat_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM seat WHERE id = %s", (seat_id,))
+        seat = cur.fetchone()
+        cur.close()
+
+        if seat:
+            seat_data = {
+                'id': seat[0],
+                'show_id': seat[1],
+                'seat_number': seat[2],
+                'seat_status': seat[3]
+            }
+            return jsonify(seat_data)
+        else:
+            return 'Seat not found', 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# update a seat by id
+@app.route('/api/seats/<int:seat_id>', methods=['PUT'])
+def update_seat(seat_id):
+    try:
+        seat_data = request.json
+        seat_number = seat_data.get('seat_number')
+        seat_status = seat_data.get('seat_status')
+
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE seat SET seat_number = %s, seat_status = %s WHERE id = %s", (seat_number, seat_status, seat_id))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Seat updated successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+# delete a seat by id
+@app.route('/api/seats/<int:seat_id>', methods=['DELETE'])
+def delete_seat(seat_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM seat WHERE id = %s", (seat_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Seat deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
 if __name__== '__main__':
     app.run()
     app.debug(True)

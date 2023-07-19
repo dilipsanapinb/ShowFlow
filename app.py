@@ -160,105 +160,259 @@ def update_user(user_id):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
+    
 # # delete a specific user
-# @app.route('/api/users/:id',methods=['DELETE'])
+
+@app.route('/api/users/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM user WHERE id = %s", (user_id,))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'User deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
 
 # # Movies Routes
 # #create a new movie
-# @app.route('/api/movies',methods=['POST'])
+@app.route('/api/movies',methods=['POST'])
+@authenticate
+def create_movie():
+    try:
+        movie_data = request.json
+        title = movie_data['title']
+        description = movie_data['description']
+        genre = movie_data['genre']
+        duration = movie_data['duration']
+        language = movie_data['language']
+        release_date=movie_data['release_date']
+        director=movie_data['director']
+        cast=movie_data['cast']
+        image=movie_data['image']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO movie (title,description,genre,duration,language,release_date,director,cast,image) VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s)", (title,description,genre,duration,language,release_date,director,cast,image))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Movie created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 # # get a list of all movies
-# @app.route('/api/movies',methods=['GET'])
+@app.route('/api/movies',methods=['GET'])
+@authenticate
+def getAllMovies():
+    try:
+        cur=mysql.connection.cursor()
+        cur.execute("SELECT * FROM movie")
+        movies=cur.fetchall()
+        cur.close()
+
+        movie_list=[]
+        for movie in movies:
+                    movie_data={
+                        "id":movie[0],
+                        "title":movie[1],
+                        "description":movie[2],
+                        "genre":movie[3],
+                        "duration":movie[4],
+                        "language":movie[5],
+                        "release_date":movie[6],
+                        "director":movie[7],
+                        "cast":movie[8],
+                        'image':movie[9]
+                    }
+                    movie_list.append(movie_data)
+
+        return jsonify(movie_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 # # get a movie by id
-# @app.route('/api/movies/:id',methods=['GET'])
+@app.route('/api/movies/<movie_id>',methods=['GET'])
+@authenticate
+def getMovieByID(movie_id):
+    try:
+        cur=mysql.connection.cursor()
+        cur.execute("SELECT * from movie Where id=%s",(movie_id))
+        movie=cur.fetchone()
+        cur.close
+
+        if movie:
+            movie_data={
+                            "id":movie[0],
+                            "title":movie[1],
+                            "description":movie[2],
+                            "genre":movie[3],
+                            "duration":movie[4],
+                            "language":movie[5],
+                            "release_date":movie[6],
+                            "director":movie[7],
+                            "cast":movie[8],
+                            'image':movie[9]
+                        }
+            return jsonify(movie_data)
+        else:
+            return "Movie Not found",404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
 # # update a movie by id 
-# @app.route('/api/movies/:id',methods=['PUT'])
-
+@app.route('/api/movies/<movie_id>',methods=['PUT'])
+def update_movie(movie_id):
+    try:
+        movie_data=request.json
+        title = movie_data['title']
+        description = movie_data['description']
+        genre = movie_data['genre']
+        duration = movie_data['duration']
+        language = movie_data['language']
+        release_date=movie_data['release_date']
+        director=movie_data['director']
+        cast=movie_data['cast']
+        image=movie_data['image']
+        
+        cur=mysql.connection.cursor()
+        cur.execute("UPDATE movie SET title=%s,description=%s,genre=%s,duration=%s,language=%s,release_date=%s,director=%s,cast=%s,image=%s WHERE id=%s",(title,description,genre,duration,language,release_date,director,cast,image,movie_id))
+        mysql.connection.commit()
+        cur.close()
+        return "Movie updated successfully"
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
 # # delete a movie by id 
-# @app.route('/api/movies/:id',methods=['DELETE'])
+@app.route('/api/movies/<movie_id>',methods=['DELETE'])
+def delete_movie(movie_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM movie WHERE id = %s", (movie_id))
+        mysql.connection.commit()
+        cur.close()
 
+        return 'User deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
 
 # # theaters Routes
 # #create a new movie
-# @app.route('/api/theaters',methods=['POST'])
+@app.route('/api/theaters',methods=['POST'])
+def create_theater():
+    try:
+        theater_data = request.json
+        name = theater_data['name']
+        address = theater_data['address']
+        city = theater_data['city']
+        state = theater_data['state']
+        capacity = theater_data['capacity']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO theater (name, address, city, state, capacity) VALUES (%s, %s, %s, %s, %s)", (name, address, city, state, capacity))
+        mysql.connection.commit()
+        cur.close()
+
+        return 'Theater created successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
 
 # # get a list of all theaters
-# @app.route('/api/theaters',methods=['GET'])
+@app.route('/api/theaters',methods=['GET'])
+def get_all_theaters():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM theater")
+        theaters = cur.fetchall()
+        cur.close()
 
-# # get a movie by id
-# @app.route('/api/theaters/:id',methods=['GET'])
+        theater_list = []
+        for theater in theaters:
+            theater_data = {
+                'id': theater[0],
+                'name': theater[1],
+                'address': theater[2],
+                'city': theater[3],
+                'state': theater[4],
+                'capacity': theater[5]
+            }
+            theater_list.append(theater_data)
 
-# # update a movie by id 
-# @app.route('/api/theaters/:id',methods=['PUT'])
+        return jsonify(theater_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+# # get a theaters by id
+@app.route('/api/theaters/<theater_id>',methods=['GET'])
+def get_theater(theater_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM theater WHERE id = %s", (theater_id,))
+        theater = cur.fetchone()
+        cur.close()
 
-# # delete a movie by id 
-# @app.route('/api/theaters/:id',methods=['DELETE'])
+        if theater:
+            theater_data = {
+                'id': theater[0],
+                'name': theater[1],
+                'address': theater[2],
+                'city': theater[3],
+                'state': theater[4],
+                'capacity': theater[5]
+            }
+            return jsonify(theater_data)
+        else:
+            return 'Theater not found', 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+    
+# # update a theaters by id 
+@app.route('/api/theaters/<theater_id>',methods=['PUT'])
+def update_theater(theater_id):
+    try:
+        theater_data = request.json
+        name = theater_data.get('name')
+        address = theater_data.get('address')
+        city = theater_data.get('city')
+        state = theater_data.get('state')
+        capacity = theater_data.get('capacity')
 
-# # show Routes
-# #create a new movie
-# @app.route('/api/show',methods=['POST'])
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE theater SET name = %s, address = %s, city = %s, state = %s, capacity = %s WHERE id = %s", (name, address, city, state, capacity, theater_id))
+        mysql.connection.commit()
+        cur.close()
 
-# # get a list of all show
-# @app.route('/api/show',methods=['GET'])
+        return 'Theater updated successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+# # delete a theaters by id 
+@app.route('/api/theaters/:id',methods=['DELETE'])
+def delete_theater(theater_id):
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("DELETE FROM theater WHERE id = %s", (theater_id,))
+        mysql.connection.commit()
+        cur.close()
 
-# # get a movie by id
-# @app.route('/api/show/:id',methods=['GET'])
+        return 'Theater deleted successfully'
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
 
-# # update a movie by id 
-# @app.route('/api/show/:id',methods=['PUT'])
 
-# # delete a movie by id 
-# @app.route('/api/show/:id',methods=['DELETE'])
 
-# # events Routes
-# #create a new movie
-# @app.route('/api/events',methods=['POST'])
-
-# # get a list of all events
-# @app.route('/api/events',methods=['GET'])
-
-# # get a movie by id
-# @app.route('/api/events/:id',methods=['GET'])
-
-# # update a movie by id 
-# @app.route('/api/events/:id',methods=['PUT'])
-
-# # delete a movie by id 
-# @app.route('/api/events/:id',methods=['DELETE'])
-
-# # participants Routes
-# #create a new movie
-# @app.route('/api/participants',methods=['POST'])
-
-# # get a list of all participants
-# @app.route('/api/participants',methods=['GET'])
-
-# # get a movie by id
-# @app.route('/api/participants/:id',methods=['GET'])
-
-# # update a movie by id 
-# @app.route('/api/participants/:id',methods=['PUT'])
-
-# # delete a movie by id 
-# @app.route('/api/participants/:id',methods=['DELETE'])
-
-# # bookings Routes
-# #create a new movie
-# @app.route('/api/bookings',methods=['POST'])
-
-# # get a list of all bookings
-# @app.route('/api/bookings',methods=['GET'])
-
-# # get a movie by id
-# @app.route('/api/bookings/:id',methods=['GET'])
-
-# # update a movie by id 
-# @app.route('/api/bookings/:id',methods=['PUT'])
-
-# # delete a movie by id 
-# @app.route('/api/bookings/:id',methods=['DELETE'])
 
 if __name__== '__main__':
     app.run()

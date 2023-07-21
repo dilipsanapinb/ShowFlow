@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import './events.css'
 const eventsData = [
   "https://assets-in.bmscdn.com/discovery-catalog/collections/tr:w-800,h-800:ote-NjUrIEV2ZW50cw%3D%3D,otc-FFFFFF,otf-Roboto,ots-64,ox-48,oy-320,ott-b:w-300:q-80/workshop-and-more-web-collection-202211140440.png",
 
@@ -39,7 +40,6 @@ const EventsData = () => {
   const eventsToShow = eventsData.slice(startIndex, endIndex);
     return (
       <div className="events-container">
-        {/* Carousel-like display for the best live events */}
         <div className="events-carousel">
           <div
             className="events-carousel-content"

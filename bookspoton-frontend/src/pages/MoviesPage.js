@@ -54,8 +54,8 @@ return (
     <div className="movies-page-container">
       <div className="movie-filter-container">
         <MovieFilter
-          genres={["Action", "Comedy", "Drama", "Adventure"]} // Add more genres as needed
-          languages={["Hindi", "English", "Marathi"]} // Add more languages as needed
+          genres={["Action", "Comedy", "Drama", "Adventure"]} 
+          languages={["Hindi", "English", "Marathi"]} 
           onFilterChange={handleFilterChange}
         />
       </div>

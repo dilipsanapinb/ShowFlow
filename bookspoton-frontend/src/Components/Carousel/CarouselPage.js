@@ -1,4 +1,5 @@
 import React from 'react'
+import './Carousel.css'
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 const movies = [
@@ -77,7 +78,7 @@ const movies = [
 
 const CarouselPage = () => {
     return (
-        <div className="carousel-container">
+        // <div className="carousel-container">
             <Carousel showArrows={true} infiniteLoop={true} autoPlay={true}>
                 {movies.map((movie, index) => (
                     <div key={index} className="movie-card">
@@ -90,7 +91,7 @@ const CarouselPage = () => {
                     </div>
                 ))}
             </Carousel>
-        </div>
+        // </div>
     );
 }
 

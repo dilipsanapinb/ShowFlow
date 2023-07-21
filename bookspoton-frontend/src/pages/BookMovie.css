@@ -1,0 +1,22 @@
+/* Add this CSS to your existing styles or a separate CSS file */
+.date-picker-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.date-picker-item {
+  min-width: 120px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  padding: 8px;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.date-picker-item.active {
+  background-color: #007bff;
+  color: #fff;
+}

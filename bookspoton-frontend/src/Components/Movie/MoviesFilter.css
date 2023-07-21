@@ -1,0 +1,46 @@
+
+.movie-filter-container {
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.movie-filter{
+    width: 40%;
+
+    /* border: 1px solid ; */
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.filter-heading {
+    margin-left: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 20px; 
+}
+
+.filter-group {
+  display: flex; /* Display the filter groups horizontally */
+  align-items: center; /* Center align the items vertically within each filter group */
+  margin-right: 20px; /* Add some right margin for space between filter groups */
+}
+
+.filter-group:last-child {
+  margin-right: 0; /* Remove the right margin for the last filter group */
+}
+
+label {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

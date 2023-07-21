@@ -177,7 +177,7 @@ def delete_user(user_id):
 # # Movies Routes
 # #create a new movie
 @app.route('/api/movies',methods=['POST'])
-@authenticate
+# @authenticate
 def create_movie():
     try:
         movie_data = request.json
@@ -190,9 +190,10 @@ def create_movie():
         director=movie_data['director']
         cast=movie_data['cast']
         image=movie_data['image']
+        rating=movie_data['rating']
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO movie (title,description,genre,duration,language,release_date,director,cast,image) VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s)", (title,description,genre,duration,language,release_date,director,cast,image))
+        cur.execute("INSERT INTO movie (title,description,genre,duration,language,release_date,director,cast,image) VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s,%s)", (title,description,genre,duration,language,release_date,director,cast,image,rating))
         mysql.connection.commit()
         cur.close()
 
@@ -203,14 +204,14 @@ def create_movie():
 
 # # get a list of all movies
 @app.route('/api/movies',methods=['GET'])
-@authenticate
+# @authenticate
 def getAllMovies():
     try:
         cur=mysql.connection.cursor()
         cur.execute("SELECT * FROM movie")
         movies=cur.fetchall()
         cur.close()
-
+        
         movie_list=[]
         for movie in movies:
                     movie_data={
@@ -223,7 +224,8 @@ def getAllMovies():
                         "release_date":movie[6],
                         "director":movie[7],
                         "cast":movie[8],
-                        'image':movie[9]
+                        'image':movie[9],
+                        'rating':movie[10]
                     }
                     movie_list.append(movie_data)
 
@@ -234,7 +236,7 @@ def getAllMovies():
 
 # # get a movie by id
 @app.route('/api/movies/<movie_id>',methods=['GET'])
-@authenticate
+# @authenticate
 def getMovieByID(movie_id):
     try:
         cur=mysql.connection.cursor()

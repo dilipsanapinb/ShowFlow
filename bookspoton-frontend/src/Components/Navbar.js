@@ -7,7 +7,7 @@ const Navbar = () => {
      const { loggedInUser } = useContext(UserContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
-   console.log(loggedInUser);
+  //  console.log(loggedInUser);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -29,6 +29,19 @@ const Navbar = () => {
         <div className="search-input">
           <BiSearch className="search-icon" />
           <input type="text" placeholder="Search" />
+        </div>
+        <div className="navigation">
+          <Link to="/movies" className="nav-button">
+            Movies
+          </Link>
+
+          <Link to="/shows" className="nav-button">
+            Shows
+          </Link>
+
+          <Link to="/events" className="nav-button">
+            Events
+          </Link>
         </div>
       </div>
       <div className="navbar-right">

@@ -436,14 +436,14 @@ def create_show():
     
 
 # # get a list of all show
-@app.route('/api/show',methods=['GET'])
+@app.route('/api/shows',methods=['GET'])
 def get_all_shows():
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM `show`")
+        cur.execute("SELECT * FROM `shows`")
         shows = cur.fetchall()
         cur.close()
-
+        print(shows)
         show_list = []
         for show in shows:
             show_data = {
@@ -451,6 +451,8 @@ def get_all_shows():
                 'movie_id': show[1],
                 'start_time': show[2].isoformat(),
                 'end_time': show[3].isoformat(),
+                 'start_time': show[2],
+                'end_time': show[3],
                 'category': show[4],
                 'theater_id': show[5],
                 'capacity': show[6],
@@ -464,11 +466,11 @@ def get_all_shows():
         return 'Internal Server Error', 500
     
 # # get a show by id
-@app.route('/api/show/:id',methods=['GET'])
+@app.route('/api/show/<show_id>',methods=['GET'])
 def get_show(show_id):
     try:
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM `show` WHERE id = %s", (show_id,))
+        cur.execute("SELECT * FROM `shows` WHERE id = %s", (show_id,))
         show = cur.fetchone()
         cur.close()
 

@@ -1,4 +1,5 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
+import './Navbar.css'
 import { Link } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 import { UserContext } from "./Userinfo/UserContext";
@@ -30,6 +31,14 @@ const Navbar = () => {
           <BiSearch className="search-icon" />
           <input type="text" placeholder="Search" />
         </div>
+        <div className="city-select">
+          <select>
+            <option value="">Select Your City</option>
+            <option value="Nashik">Nashik</option>
+            <option value="Pune">Pune</option>
+            <option value="Mumbai">Mumbai</option>
+          </select>
+        </div>
         <div className="navigation">
           <Link to="/movies" className="nav-button">
             Movies
@@ -60,6 +69,7 @@ const Navbar = () => {
                 Sign In
               </Link>
             )}
+
             <button className="dropdown-button">Logout</button>
             <button className="dropdown-button">More</button>
           </div>

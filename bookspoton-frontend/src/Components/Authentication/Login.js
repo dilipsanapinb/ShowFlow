@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-
+import React, { useState, useContext } from "react";
 import {
   Button,
   FormControl,
@@ -9,21 +8,20 @@ import {
   VStack,
   InputGroup,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../Userinfo/UserContext";
+import { UserContext } from "../../UserProvider";
 
 const Login = () => {
-    const { setLoggedInUser } = useContext(UserContext);
+  // const { setLoggedInUser } = useContext(UserContext);
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-    const navigate = useNavigate();
-   
+  const navigate = useNavigate();
+
   // handleClick show and hide the password
   const handleClick = () => setShow(!show);
 
@@ -62,8 +60,10 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
-        console.log(email);
-         setLoggedInUser(email);
+
+      // Update the loggedInUser context with the user's email
+      // setLoggedInUser(email);
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
       navigate("/");
@@ -123,19 +123,6 @@ const Login = () => {
       >
         Login
       </Button>
-
-      {/* guest user button */}
-      {/* <Button
-        variant="solid"
-        colorScheme="red"
-        width="100%"
-        onClick={() => {
-          setEmail("guest@example.com");
-          setPassword("12345");
-        }}
-      >
-        Get Guest User Credentials
-      </Button> */}
     </VStack>
   );
 };

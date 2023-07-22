@@ -6,13 +6,12 @@ import Navbar from "../Components/Navbar";
 import "./MoviesPage.css";
 import MovieCard from "../Components/Movie/MovieCard";
 import MovieFilter from "../Components/Movie/MovieFilter";
+import Footer from "../Components/Footer/Footer";
 // import { Carousel } from "react-responsive-carousel";
 const MoviesPage = () => {
-    // const history = useHistory();
-const navigate = useNavigate();
+
 
 const [movies, setMovies] = useState([]);
-    console.log(movies);
     const [filteredMovies, setFilteredMovies] = useState(movies);
 
     const handleFilterChange = ({ genre, language, rating }) => {
@@ -66,6 +65,7 @@ return (
         ))}
       </div>
     </div>
+    <Footer/>
   </div>
 );
 }

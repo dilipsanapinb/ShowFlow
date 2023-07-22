@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./BookMovie.css";
 import {
+    Image,
   Text,
   Box,
   Button,
@@ -21,38 +22,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import PaymentModel from "../Components/PaymentModel/PaymentModel";
 
-const showsData = [
-  {
-    id: 1,
-    title: "Baipan Bhari Deva",
-    genre: "Action",
-    image: "https://example.com/movie1.jpg",
-    rating: 4.5,
-    reviewCount: 100,
-    date: new Date("2023-07-20"), // Add a valid date here
-    timings: ["10:00 AM", "2:00 PM", "6:00 PM"],
-  },
-  {
-    id: 2,
-    title: "Baipan Bhari Deva",
-    genre: "Comedy",
-    image: "https://example.com/movie2.jpg",
-    rating: 3.8,
-    reviewCount: 85,
-    date: new Date("2023-07-21"), // Add a valid date here
-    timings: ["11:00 AM", "3:00 PM", "7:00 PM"],
-  },
-  {
-    id: 3,
-    title: "Baipan Bhari Deva",
-    genre: "Drama",
-    image: "https://example.com/movie3.jpg",
-    rating: 4.2,
-    reviewCount: 120,
-    date: new Date("2023-07-22"), // Add a valid date here
-    timings: ["12:00 PM", "4:00 PM", "8:00 PM"],
-  },
-];
+
 
 const BookMoviePage = () => {
   const [selectedTheaterId, setSelectedTheaterId] = useState(null);
@@ -61,12 +31,32 @@ const BookMoviePage = () => {
   const [selectedTickets, setSelectedTickets] = useState(1);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const navigate = useNavigate();
-
+const selectedMovieData = JSON.parse(localStorage.getItem("bookedMovie"));
   const handleShowClick = (show) => {
     setSelectedShow(show);
     setSelectedTickets(1);
     setIsModalOpen(true);
-  };
+    };
+    
+    const handlesaveFunction = () => {
+       
+   }
+    //  const convertTo12HourFormat = (isoTime) => {
+    //    const date = new Date(isoTime);
+    //    const hours = date.getHours();
+    //    const minutes = date.getMinutes();
+
+    //    // Determine AM/PM
+    //    const amOrPm = hours >= 12 ? "PM" : "AM";
+
+    //    // Convert hours to 12-hour format
+    //    const hours12Format = hours % 12 || 12;
+
+    //    // Add leading zero for single-digit minutes
+    //    const minutesWithLeadingZero = minutes < 10 ? `0${minutes}` : minutes;
+
+    //    return `${hours12Format}:${minutesWithLeadingZero} ${amOrPm}`;
+    //  };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -76,7 +66,8 @@ const BookMoviePage = () => {
   const handleSelectTickets = (value) => {
     setSelectedTickets(value);
   };
-  const [theaters, setTheaters] = useState([]);
+    const [theaters, setTheaters] = useState([]);
+    const [showsData,setShowsdata]=useState([])
 
   useEffect(() => {
     axios
@@ -87,34 +78,52 @@ const BookMoviePage = () => {
       .catch((error) => {
         console.log(error);
       });
+       axios
+         .get("http://127.0.0.1:5000/api/shows")
+         .then((response) => {
+           setShowsdata(response.data);
+         })
+         .catch((error) => {
+           console.log(error);
+         });
   }, []);
-
+    
+    const filterTheater = showsData.filter(
+      (theater) => theater.movie_id === selectedMovieData.id
+    );
+     const filteredShows = showsData.filter(
+       (show) => show.movie_id === selectedMovieData.id
+     );
     return (
         <div>
+            {/* Display movie image, description, genre, and cast */}
+            <Box p={4} textAlign="center">
+                <Image
+                    src={selectedMovieData.image}
+                    alt={selectedMovieData.title}
+                    maxW="800px"
+                    mx="auto"
+                    borderRadius="lg"
+                />
+                <Box mt={4}>
+                    <Text fontSize="xl" fontWeight="bold">
+                        {selectedMovieData.title}
+                    </Text>
+                    <Text color="gray.500">{selectedMovieData.description}</Text>
+                    <Text mt={2} color="teal.500" fontWeight="bold">
+                        Genre: {selectedMovieData.genre}
+                    </Text>
+                    <Text mt={2}>Cast: {selectedMovieData.cast}</Text>
+                </Box>
+            </Box>
             {/* Dates section */}
             {/*  */}
-            <Box mb={4}>
-                <h2>Available Booking Dates:</h2>
-                <div className="date-picker-container">
-                    {showsData.map((show) => (
-                        <div
-                            key={show.id}
-                            className={`date-picker-item ${selectedDate.toDateString() === show.date.toDateString()
-                                    ? "active"
-                                    : ""
-                                }`}
-                            onClick={() => setSelectedDate(show.date)}
-                        >
-                            {show.date.toDateString()}
-                        </div>
-                    ))}
-                </div>
-            </Box>
+
             <Flex>
                 {/* Display theaters */}
                 <Box>
                     <h2>Theaters</h2>
-                    {theaters.map((theater) => (
+                    {filterTheater.map((theater) => (
                         <Box
                             key={theater.id}
                             maxW="sm"
@@ -165,7 +174,7 @@ const BookMoviePage = () => {
                         </Text>
                     </Center>
                     <Stack direction="row" spacing={4} wrap="wrap">
-                        {showsData.map((show) => (
+                        {filteredShows.map((show) => (
                             <Box
                                 key={show.id}
                                 maxW="sm"
@@ -175,13 +184,6 @@ const BookMoviePage = () => {
                                 cursor="pointer"
                                 onClick={() => handleShowClick(show)}
                             >
-                                {/* <Image
-                  src={show.image}
-                  alt={show.title}
-                  h="200px"
-                  objectFit="cover"
-                /> */}
-
                                 <Box p={4}>
                                     <Box display="flex" alignItems="baseline">
                                         <Box
@@ -192,7 +194,7 @@ const BookMoviePage = () => {
                                             textTransform="uppercase"
                                             flex="1"
                                         >
-                                            {show.genre}
+                                            {show.category}
                                         </Box>
                                     </Box>
 
@@ -203,32 +205,13 @@ const BookMoviePage = () => {
                                         lineHeight="tight"
                                         noOfLines={1}
                                     >
-                                        {show.title}
+                                        {selectedMovieData.title}
                                     </Box>
-
-                                    <Box display="flex" mt={2} alignItems="center">
-                                        {Array(5)
-                                            .fill("")
-                                            .map((_, i) => (
-                                                <StarIcon
-                                                    key={i}
-                                                    color={
-                                                        i < Math.round(show.rating / 2)
-                                                            ? "teal.500"
-                                                            : "gray.300"
-                                                    }
-                                                />
-                                            ))}
-                                        <Box as="span" ml="2" color="gray.600" fontSize="sm">
-                                            {show.reviewCount} reviews
-                                        </Box>
+                                    <Box>
+                                        <Box mt={4}>Start: {show.start_time}</Box>
+                                        <Box mt={4}>End: {show.end_time}</Box>
                                     </Box>
-
-                                    <Box mt={4}>
-                                        {show.timings.map((timing) => (
-                                            <Box key={timing}>{timing}</Box>
-                                        ))}
-                                    </Box>
+                                    <Box mt={4}>price: {show.price}</Box>
                                 </Box>
                             </Box>
                         ))}
@@ -269,7 +252,10 @@ const BookMoviePage = () => {
                                 <Button
                                     colorScheme="teal"
                                     w="full"
-                                    onClick={() => handleModalClose()}
+                                    onClick={() => {
+                                        handleModalClose();
+                                        handlesaveFunction();
+                                    }}
                                 >
                                     Book Now ({selectedTickets} ticket
                                     {selectedTickets > 1 ? "s" : ""})

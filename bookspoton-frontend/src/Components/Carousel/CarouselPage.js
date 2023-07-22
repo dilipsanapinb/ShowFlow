@@ -78,8 +78,8 @@ const movies = [
 
 const CarouselPage = () => {
     return (
-        // <div className="carousel-container">
-            <Carousel showArrows={true} infiniteLoop={true} autoPlay={true}>
+        <div className="carousel-container" style={{width:'90%', borderRadius:'4px',margin:'0 auto'}}>
+            <Carousel showArrows={true} infiniteLoop={true} autoPlay={true} >
                 {movies.map((movie, index) => (
                     <div key={index} className="movie-card">
                         <img src={movie.image} alt={movie.title} />
@@ -91,7 +91,7 @@ const CarouselPage = () => {
                     </div>
                 ))}
             </Carousel>
-        // </div>
+        </div>
     );
 }
 

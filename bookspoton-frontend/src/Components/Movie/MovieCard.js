@@ -5,7 +5,8 @@ import { StarIcon } from "@chakra-ui/icons";
 import { Link} from "react-router-dom";
 function MovieCard({ movie }) {
 
-const handleBookNow = () => {
+  const handleBookNow = (el) => {
+  localStorage.setItem("bookedMovie", JSON.stringify(el));
   // Add any necessary logic here before navigating
 //   Navigate("/buytickets");
 };
@@ -94,7 +95,7 @@ const handleBookNow = () => {
               colorScheme="teal"
               w="40%"
               _hover={{ bgColor: "red.500", color: "white" }}
-              onClick={handleBookNow}
+              onClick={()=>handleBookNow(movie)}
             >
               Book tickets
             </Button>

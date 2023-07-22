@@ -34,7 +34,7 @@ const MovieFilter = ({ genres, languages, onFilterChange }) => {
   };
 
   return (
-    <div className="movie-filter">
+    <div className="movie-filter" >
       {/* <h2>Filters</h2> */}
       <div>
         <label htmlFor="genre">Genre:</label>

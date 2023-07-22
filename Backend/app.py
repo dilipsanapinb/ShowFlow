@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os 
 import bcrypt
+from datetime import timedelta
 import jwt
 from  functools import wraps
 app=Flask(__name__)
@@ -412,7 +413,7 @@ def delete_theater(theater_id):
 
 # # show Routes
 # #create a new show
-@app.route('/api/show',methods=['POST'])
+@app.route('/api/shows',methods=['POST'])
 def create_show():
     try:
         show_data = request.json
@@ -435,6 +436,16 @@ def create_show():
         return 'Internal Server Error', 500
     
 
+def timedelta_to_string(td):
+    if td is not None:
+        hours, remainder = divmod(td.total_seconds(), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{int(hours):02d}:{int(minutes):02d}:{int(seconds):02d}"
+    else:
+        return None
+
+
+
 # # get a list of all show
 @app.route('/api/shows',methods=['GET'])
 def get_all_shows():
@@ -443,16 +454,14 @@ def get_all_shows():
         cur.execute("SELECT * FROM `shows`")
         shows = cur.fetchall()
         cur.close()
-        print(shows)
+        # print(shows)
         show_list = []
         for show in shows:
             show_data = {
                 'id': show[0],
                 'movie_id': show[1],
-                'start_time': show[2].isoformat(),
-                'end_time': show[3].isoformat(),
-                 'start_time': show[2],
-                'end_time': show[3],
+                'start_time':  timedelta_to_string(show[2]),
+                'end_time':  timedelta_to_string(show[3]),
                 'category': show[4],
                 'theater_id': show[5],
                 'capacity': show[6],

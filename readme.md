@@ -27,6 +27,8 @@
 
 ## ER Diagram
 
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/ER%20Diagram.png"></img>
+
 https://lucid.app/lucidchart/051290e0-6626-41cd-9123-e9a4f159c307/edit?viewport_loc=1887%2C-19%2C3975%2C1789%2CHWEp-vi-RSFO&invitationId=inv_161f5c93-ab49-4d78-9fc8-bffdadb725e4
 
 # Entities
@@ -288,3 +290,16 @@ participant_id (foreign key referencing the Participant entity)
     **/api/theatres/<**theatre_id**>** (methods: `DELETE`)
     
     Response: theatres ****with ID deleted
+
+
+### Home Page
+
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Landiang%20Page.png"></img>
+
+### Sign Up page
+<img src=""></img>
+
+### Sign In Page
+<img src=""></img>
+
+### 

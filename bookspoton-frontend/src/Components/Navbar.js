@@ -44,7 +44,7 @@ const Navbar = () => {
       alignItems="center"
       justifyContent="space-between"
       paddingY="1rem"
-      width="90%"
+      width="100%"
       margin={"auto"}
       marginBottom={"10px"}
       bgColor={"#2e3147"}

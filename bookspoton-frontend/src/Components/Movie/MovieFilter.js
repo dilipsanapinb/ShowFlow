@@ -1,7 +1,7 @@
-// MovieFilter.js
+
 import React, { useState } from "react";
 import './MoviesFilter.css'
-const MovieFilter = ({ genres, languages, onFilterChange }) => {
+const MovieFilter = ({ genres, languages, ratings,onFilterChange }) => {
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedRating, setSelectedRating] = useState("");
@@ -34,8 +34,7 @@ const MovieFilter = ({ genres, languages, onFilterChange }) => {
   };
 
   return (
-    <div className="movie-filter" >
-      {/* <h2>Filters</h2> */}
+    <div className="movie-filter">
       <div>
         <label htmlFor="genre">Genre:</label>
         <select id="genre" value={selectedGenre} onChange={handleGenreChange}>
@@ -70,9 +69,11 @@ const MovieFilter = ({ genres, languages, onFilterChange }) => {
           onChange={handleRatingChange}
         >
           <option value="">All</option>
-          <option value="9.0+">9.0+</option>
-          <option value="8.0+">8.0+</option>
-          <option value="7.0+">7.0+</option>
+          {ratings.map((rating) => (
+            <option key={rating} value={rating}>
+              {rating}
+            </option>
+          ))}
         </select>
       </div>
     </div>

@@ -3,7 +3,9 @@
 
 # Deployed links
 ## Frontend
+https://incredible-cassata-46f042.netlify.app/buytickets
 ## Backend
+https://bookspoton.onrender.com/
 
 
 # Tech-Stacks used for the building this application

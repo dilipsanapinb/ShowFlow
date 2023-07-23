@@ -297,9 +297,29 @@ participant_id (foreign key referencing the Participant entity)
 <img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Landiang%20Page.png"></img>
 
 ### Sign Up page
-<img src=""></img>
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Sign%20Up%20Page.png"></img>
 
 ### Sign In Page
-<img src=""></img>
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Sign%20In%20Page.png"></img>
 
-### 
+### Carousel1
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Carausel1.png"></img>
+
+### Carousel2
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Carausel2.png"></img>
+
+### Movies Page
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Movies%20page.png"></img>
+
+### Shows page
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Shows%20page.png"></img>
+
+### Select Tickets page
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Select%20Tickets.png"></img>
+
+### Payment page
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Payment%20page.png"></img>
+
+### Paymetn confirmation page
+<img src="https://github.com/dilipsanapinb/BookSpotOnbackend/blob/main/ProjectImages/Payment%20Confirmation.png"></img>
+

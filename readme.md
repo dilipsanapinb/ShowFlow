@@ -264,3 +264,27 @@ participant_id (foreign key referencing the Participant entity)
                     "image":"abc.png"
 
                 }
+
+2. **Get All theatres List**
+    
+    **/api/theatres**(methods: `GET`)
+    
+    Response: An array of theatres
+    
+3. **Get a theatres by ID**
+    
+    **/api/theatres/<theatre_id>** (methods: `GET`)
+    
+    Response: Information for a single theatres
+    
+4. **Update a theatres by ID**
+    
+    **/api/theatres/<theatre_id>** (methods: `PUT`)
+    
+    Response: theatre updated
+    
+5. **Delete a theatre by ID**
+    
+    **/api/theatres/<**theatre_id**>** (methods: `DELETE`)
+    
+    Response: theatres ****with ID deleted

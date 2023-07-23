@@ -107,28 +107,27 @@ participant_id (foreign key referencing the Participant entity)
     
     **POST /api/user**
     
-    Schema:
-            {
-            "id": 1,
-            "username": "Dilip",
-            "email": "dilip@gmail.com",
-            "password": "dilip123",
-            "role": "user",
-            "membership": "Regular"
-            }
+                Schema:{
+                        "id": 1,
+                        "username": "Dilip",
+                        "email": "dilip@gmail.com",
+                        "password": "dilip123",
+                        "role": "user",
+                        "membership": "Regular"
+                    }
 
 2. 1. **Log in the user**
     
     **/api/login methods=["POST"]**
     
-    Schema:
-            {
-                "username": "Dilip",
-                "email": "dilip@gmail.com",
-                "password": "dilip123",
-                "role": "user",
-                "membership": "Regular"
-            }
+                    Schema:
+                        {
+                            "username": "Dilip",
+                            "email": "dilip@gmail.com",
+                            "password": "dilip123",
+                            "role": "user",
+                            "membership": "Regular"
+                        }
 
 3. **Get All Users List**
     

@@ -198,3 +198,69 @@ participant_id (foreign key referencing the Participant entity)
     **/api/movies/<movie_id>** (methods: `DELETE`)
     
     Response: Movie with ID deleted
+
+
+### Shows Api
+1. **Create a show endpoint:**
+    
+    **POST /api/shows**
+    
+                Schema:{
+                    "id": 1,
+                    "title": "The Shawshank Redemption",
+                    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+                    "genre": "Drama",
+                    "duration": "2h 22min",
+                    "language": "English",
+                    "release_date": "1994-10-14",
+                    "director": "Frank Darabont",
+                    "cast": "Tim Robbins, Morgan Freeman"
+                    "image":"abc.png"
+
+                }
+2. **Get a show by ID**
+    
+    **/api/shows/<show_id>** (methods: `GET`)
+    
+    Response: Information for a single show
+    
+3. **Update a show by ID**
+    
+    **/api/shows/<show_id>** (methods: `PUT`)
+    
+    Response: Show updated
+    
+4. **Delete a show by ID**
+    1. **Get All shows List**
+        
+        **/api/shows** (methods: `GET`)
+        
+        Response: An array of shows
+        
+    
+    **/api/shows/<show_id>** (methods: `DELETE`)
+    
+    Response: Show with ID deleted
+
+5. **Get all show**
+    **GET /api/show**
+
+
+### Theaters Api:
+1. **Create a theatre endpoint:**
+    
+    **POST /api/theatres**
+    
+                Schema:{
+                    "id": 1,
+                    "title": "The Shawshank Redemption",
+                    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+                    "genre": "Drama",
+                    "duration": "2h 22min",
+                    "language": "English",
+                    "release_date": "1994-10-14",
+                    "director": "Frank Darabont",
+                    "cast": "Tim Robbins, Morgan Freeman"
+                    "image":"abc.png"
+
+                }

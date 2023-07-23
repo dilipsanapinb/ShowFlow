@@ -25,6 +25,10 @@
 - VS-Code
 - github
 
+## ER Diagram
+
+https://lucid.app/lucidchart/051290e0-6626-41cd-9123-e9a4f159c307/edit?viewport_loc=1887%2C-19%2C3975%2C1789%2CHWEp-vi-RSFO&invitationId=inv_161f5c93-ab49-4d78-9fc8-bffdadb725e4
+
 # Entities
 
 1. User:
@@ -94,3 +98,104 @@ participant_id (foreign key referencing the Participant entity)
 - number of tickets
 - booking date
 - total cost
+
+
+## API's for the Different Entities:
+
+### User :
+1. **Create a user endpoint:**
+    
+    **POST /api/user**
+    
+    Schema:
+            {
+            "id": 1,
+            "username": "Dilip",
+            "email": "dilip@gmail.com",
+            "password": "dilip123",
+            "role": "user",
+            "membership": "Regular"
+            }
+
+2. 1. **Log in the user**
+    
+    **/api/login methods=["POST"]**
+    
+    Schema:
+            {
+                "username": "Dilip",
+                "email": "dilip@gmail.com",
+                "password": "dilip123",
+                "role": "user",
+                "membership": "Regular"
+            }
+
+3. **Get All Users List**
+    
+    **/api/users** (methods: `GET`)
+    
+    Response: An array of users
+    
+4. **Get a user by ID**
+    
+    **/api/users/<user_id> methods=["GET"]**
+    
+    Response: Information for a single user
+    
+5. **Update a user by ID**
+    
+    '**/api/users/<user_id>',methods=['PUT']**
+    
+    Response: User updated
+    
+6. **Delete a user by ID**
+    
+    **/api/users/<user_id>', methods=['DELETE']**
+    
+    Response: User with ID deleted
+
+
+### Movies Routes
+1. **Create a movie endpoint:**
+    
+    **POST /api/movie**
+    
+    Schema:
+            {
+                "id": 1,
+                "title": "The Shawshank Redemption",
+                "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+                "genre": "Drama",
+                "duration": "2h 22min",
+                "language": "English",
+                "release_date": "1994-10-14",
+                "director": "Frank Darabont",
+                "cast": "Tim Robbins, Morgan Freeman"
+                "image":"abc.png"
+
+            }
+            Response: Movie created successfully
+
+2. **Get All Movies List**
+    
+    **/api/movies** (methods: `GET`)
+    
+    Response: An array of movies
+    
+3. **Get a movie by ID**
+    
+    **/api/movies/<movie_id>** (methods: `GET`)
+    
+    Response: Information for a single movie
+    
+4. **Update a movie by ID**
+    
+    **/api/movies/<movie_id>** (methods: `PUT`)
+    
+    Response: Movie updated
+    
+5. **Delete a movie by ID**
+    
+    **/api/movies/<movie_id>** (methods: `DELETE`)
+    
+    Response: Movie with ID deleted

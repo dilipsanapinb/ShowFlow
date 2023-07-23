@@ -3,7 +3,7 @@
 
 # Deployed links
 ## Frontend
-https://incredible-cassata-46f042.netlify.app/buytickets
+https://incredible-cassata-46f042.netlify.app/
 ## Backend
 https://bookspoton.onrender.com/
 

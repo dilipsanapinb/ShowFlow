@@ -159,20 +159,20 @@ participant_id (foreign key referencing the Participant entity)
     
     **POST /api/movie**
     
-    Schema:
-            {
-                "id": 1,
-                "title": "The Shawshank Redemption",
-                "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-                "genre": "Drama",
-                "duration": "2h 22min",
-                "language": "English",
-                "release_date": "1994-10-14",
-                "director": "Frank Darabont",
-                "cast": "Tim Robbins, Morgan Freeman"
-                "image":"abc.png"
+            Schema:
+                    {
+                        "id": 1,
+                        "title": "The Shawshank Redemption",
+                        "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+                        "genre": "Drama",
+                        "duration": "2h 22min",
+                        "language": "English",
+                        "release_date": "1994-10-14",
+                        "director": "Frank Darabont",
+                        "cast": "Tim Robbins, Morgan Freeman"
+                        "image":"abc.png"
 
-            }
+                    }
             Response: Movie created successfully
 
 2. **Get All Movies List**

@@ -25,7 +25,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <div style={{width:"90%", margin:"auto", borderRadius:'3px'}}>
+    <div style={{width:"100%", margin:"auto", borderRadius:'3px'}}>
       <Box as="footer" py={4} bg="gray.800" color="white" borderRadius={"5px"} height={"200px"}>
         <Flex
           justify="center"

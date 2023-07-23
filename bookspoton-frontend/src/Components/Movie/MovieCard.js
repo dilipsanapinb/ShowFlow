@@ -24,12 +24,13 @@ function MovieCard({ movie }) {
   </Button>
 </Link>;
 
-    return (
-      <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden">
+  return (
+      
+      <Box maxW="sm" borderWidth="1px" height="600px" borderRadius="lg" overflow="hidden">
         <Image
           src={movie.image}
           alt={movie.title}
-          style={{ width: "100%", height: "70%" }}
+          style={{ width: "100%", height: "60%" }}
         />
 
         <Box p="6">

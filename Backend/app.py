@@ -194,7 +194,7 @@ def create_movie():
         rating=movie_data['rating']
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO movie (title,description,genre,duration,language,release_date,director,cast,image) VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s,%s)", (title,description,genre,duration,language,release_date,director,cast,image,rating))
+        cur.execute("INSERT INTO movie (title,description,genre,duration,language,release_date,director,cast,image,rating) VALUES (%s, %s, %s, %s, %s,%s,%s,%s,%s,%s)", (title,description,genre,duration,language,release_date,director,cast,image,rating))
         mysql.connection.commit()
         cur.close()
 
@@ -203,6 +203,8 @@ def create_movie():
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
 
+
+
 # # get a list of all movies
 @app.route('/api/movies',methods=['GET'])
 # @authenticate
@@ -210,11 +212,11 @@ def getAllMovies():
     try:
         cur=mysql.connection.cursor()
         cur.execute("SELECT * FROM movie")
-        movies=cur.fetchall()
+        allmovies=cur.fetchall()
         cur.close()
         
         movie_list=[]
-        for movie in movies:
+        for movie in allmovies:
                     movie_data={
                         "id":movie[0],
                         "title":movie[1],
@@ -234,6 +236,126 @@ def getAllMovies():
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
+
+
+# movies can filter by the language
+@app.route('/api/movies', methods=['GET'])
+# @authenticate
+def getAllMoviesL():
+    try:
+        cur = mysql.connection.cursor()
+        language = request.args.get('language')  # Get the language from query parameter
+
+        if language:
+            cur.execute("SELECT * FROM movie WHERE language = %s", (language,))
+        else:
+            cur.execute("SELECT * FROM movie")
+
+        allmovies = cur.fetchall()
+        cur.close()
+
+        movie_list = []
+        for movie in allmovies:
+            movie_data = {
+                "id": movie[0],
+                "title": movie[1],
+                "description": movie[2],
+                "genre": movie[3],
+                "duration": movie[4],
+                "language": movie[5],
+                "release_date": movie[6],
+                "director": movie[7],
+                "cast": movie[8],
+                'image': movie[9],
+                'rating': movie[10]
+            }
+            movie_list.append(movie_data)
+
+        return jsonify(movie_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+
+# genre
+
+@app.route('/api/movies', methods=['GET'])
+# @authenticate
+def getAllMoviesG():
+    try:
+        cur = mysql.connection.cursor()
+        genre = request.args.get('genre')  # Get the genre from query parameter
+
+        if genre:
+            cur.execute("SELECT * FROM movie WHERE genre = %s", (genre,))
+        else:
+            cur.execute("SELECT * FROM movie")
+
+        allmovies = cur.fetchall()
+        cur.close()
+
+        movie_list = []
+        for movie in allmovies:
+            movie_data = {
+                "id": movie[0],
+                "title": movie[1],
+                "description": movie[2],
+                "genre": movie[3],
+                "duration": movie[4],
+                "language": movie[5],
+                "release_date": movie[6],
+                "director": movie[7],
+                "cast": movie[8],
+                'image': movie[9],
+                'rating': movie[10]
+            }
+            movie_list.append(movie_data)
+
+        return jsonify(movie_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
+
+# rating
+
+@app.route('/api/movies', methods=['GET'])
+# @authenticate
+def getAllMoviesR():
+    try:
+        cur = mysql.connection.cursor()
+        ratings = request.args.get('ratings')  # Get the ratings from query parameter
+
+        if ratings:
+            cur.execute("SELECT * FROM movie WHERE rating >= %s", (ratings,))
+        else:
+            cur.execute("SELECT * FROM movie")
+
+        allmovies = cur.fetchall()
+        cur.close()
+
+        movie_list = []
+        for movie in allmovies:
+            movie_data = {
+                "id": movie[0],
+                "title": movie[1],
+                "description": movie[2],
+                "genre": movie[3],
+                "duration": movie[4],
+                "language": movie[5],
+                "release_date": movie[6],
+                "director": movie[7],
+                "cast": movie[8],
+                'image': movie[9],
+                'rating': movie[10]
+            }
+            movie_list.append(movie_data)
+
+        return jsonify(movie_list)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return 'Internal Server Error', 500
+
 
 # # get a movie by id
 @app.route('/api/movies/<movie_id>',methods=['GET'])
@@ -264,6 +386,8 @@ def getMovieByID(movie_id):
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return 'Internal Server Error', 500
+
+
 
 # # update a movie by id 
 @app.route('/api/movies/<movie_id>',methods=['PUT'])

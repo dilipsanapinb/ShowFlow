@@ -1,6 +1,30 @@
 # BookSpotOn Web App
 - BookSpontOn is web application that help us to book and movie, shows and events online and help the people in solving the real life problem of the time saving for the entertainment.
 
+# Deployed links
+## Frontend
+## Backend
+
+
+# Tech-Stacks used for the building this application
+
+## For frontend
+- React
+- Chackra UI
+- HTML
+- CSS
+- Javascript
+- Netlify
+## Backend
+- Python
+- Flask
+- Render.com
+
+## Othe Tech-Stacks
+- npm
+- VS-Code
+- github
+
 # Entities
 
 1. User:

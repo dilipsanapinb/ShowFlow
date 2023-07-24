@@ -5,6 +5,8 @@
 ## Frontend
 https://incredible-cassata-46f042.netlify.app/
 ## Backend
+Backend is not delpoyed due to the MySQL is not linked.
+We need to connect the backend locally and then we can add the data to MySQL and app works fine.
 https://bookspoton.onrender.com/
 
 

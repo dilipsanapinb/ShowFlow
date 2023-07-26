@@ -1,5 +1,5 @@
-# BookSpotOn Web App
-- BookSpontOn is web application that help us to book and movie, shows and events online and help the people in solving the real life problem of the time saving for the entertainment.
+# ShowFlow Web App
+- ShowFlow is web application that help us to book and movie, shows and events online and help the people in solving the real life problem of the time saving for the entertainment.
 
 # Deployed links
 ## Frontend
